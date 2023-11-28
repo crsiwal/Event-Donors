@@ -8,6 +8,7 @@ function readEvents($csvFilePath, $eventName) {
 		$title = array_shift($data);
 		$summery = array_shift($data);
 		$total = array_sum(array_values($data));
+		arsort($data);
 		return [
 			"event" => $event,
 			"title" => $title,
@@ -20,7 +21,7 @@ function readEvents($csvFilePath, $eventName) {
 }
 
 function topDonor($donors, $count = 5) {
-	arsort($donors);
+	// arsort($donors);
 	return array_slice($donors, 0, $count, true);
 }
 
@@ -34,15 +35,15 @@ function eventColumn($eventName, $csvFilePath) {
 	$file = fopen($csvFilePath, 'r');
 
 	// Read the header row to get column names
-	$header = fgetcsv($file);
+	$header = array_map('strtolower', fgetcsv($file));;
 
 	// Find the index of the specified event column
-	$eventIndex = array_search($eventName, $header);
+	$eventIndex = array_search(strtolower($eventName), $header);
 
 	return $eventIndex > 1 ? $eventIndex : false;
 }
 
-function donorTable($donors) {
+function donorTable($donors, $boldName = false) {
 ?>
 	<div class="table-responsive">
 		<table class="table table-striped table-bordered">
@@ -60,8 +61,8 @@ function donorTable($donors) {
 				?>
 					<tr>
 						<th scope="row"><?= $serial++; ?></th>
-						<td><?= $person; ?></td>
-						<td><?= $amount; ?></td>
+						<td class="<?= $boldName ? 'fw-bold' : ''; ?>"><?= $person; ?></td>
+						<td><?= formatCurrency(empty($amount) ? 0 : $amount); ?></td>
 					</tr>
 				<?php
 				}
@@ -71,3 +72,14 @@ function donorTable($donors) {
 	</div>
 <?php
 }
+
+function donationButton($tn = "Donation", $pn = "Rashtriya Kisan Mazdoor Sangathan") {
+?>
+	<a class="btn btn-outline-danger fw-bold px-5 btn-lg" href="upi://pay?pa=rahulsiwal62@oksbi&cu=INR&tn=<?= $tn; ?>&pn=<?= $pn; ?>">>> <?= _t("YOURCONTRIBUTE"); ?></a>
+<?php
+}
+
+
+function formatCurrency($amount) {
+	return '₹ ' . str_replace(',', ',', number_format($amount, 2, '.', ','));
+};

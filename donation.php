@@ -1,32 +1,52 @@
-<!DOCTYPE html>
-<html lang="en">
+<?php
+$data = readEvents(BASEPATH . "csv/" . $dataFile . ".csv", $eventName);
+if (is_array($data) && isset($data["event"])) {
+?>
+	<!DOCTYPE html>
+	<html lang="en">
 
-<head>
-	<title>Donation Management Tool</title>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-</head>
+	<head>
+		<title><?= $data["title"]; ?></title>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1">
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+	</head>
 
-<body>
-	<?php
-	$data = readEvents(BASEPATH . "csv/" . $dataFile . ".csv", $eventName);
-	if (is_array($data) && isset($data["event"])) {
-	?>
+	<body>
 		<div class="container mt-3">
-			<h2><?= $data["title"]; ?></h2>
-			<p><?= $data["summery"]; ?></p>
+			<h1 class="fw-bold"><?= $data["title"]; ?></h1>
+			<p class="h5 lh-lg mt-3"><?= $data["summery"]; ?></p>
 
-			<h3>Top 5 users of this event</h3>
-			<?= donorTable(topDonor($data["data"], 2)); ?>
+			<div class="mt-4 text-center">
+				<?= donationButton($data["event"]); ?>
+			</div>
 
-			<h3>All user list</h3>
-			<?= donorTable($data["data"]); ?>
+			<!-- Total amount -->
+			<h2 class="mt-5"><?= _t("TOTALAMOUNT"); ?>: <?= $data["total"]; ?></h2>
+
+			<!-- Top 5 donors of this event -->
+			<h3 class="mt-5"><?= _t("TOPFIVEUSER"); ?></h3>
+			<?php
+			$topDonor = array_slice($data["data"], 0, 5, true);
+			donorTable($topDonor, true);
+			?>
+
+			<h3 class="mt-3"><?= _t("DONORLIST"); ?></h3>
+			<?php
+			$remaningDonor = array_slice($data["data"], 5);
+
+			donorTable($remaningDonor);
+			?>
+
+			<div class="my-4 text-center">
+				<?= donationButton($data["event"]); ?>
+			</div>
+
 		</div>
-	<?php
-	}
-	?>
-</body>
+	</body>
 
-</html>
+	</html>
+<?php
+}
+?>
