@@ -19,11 +19,20 @@ if (is_array($data) && isset($data["event"])) {
 			<p class="h5 lh-lg mt-3"><?= $data["summery"]; ?></p>
 
 			<div class="mt-4 text-center">
-				<?= donationButton($data["event"]); ?>
+				<?= donationButton($data["paymentUrl"]); ?>
 			</div>
 
 			<!-- Total amount -->
-			<h2 class="mt-5"><?= _t("TOTALAMOUNT"); ?>: <?= $data["total"]; ?></h2>
+			<h2 class="mt-5"><?= _t("TARGETAMOUNT"); ?>: <?= formatCurrency($data["targetAmount"]); ?></h2>
+
+			<!-- Total amount -->
+			<?php
+			$receivedPercentage = percentage($data["targetAmount"], $data["total"]);
+			?>
+			<h2 class="mt-5">
+				<?= _t("TOTALAMOUNT"); ?>: <?= formatCurrency($data["total"]); ?>
+				<span class="text-<?= $receivedPercentage > 100 ? 'success' : 'danger'; ?>">(<?= $receivedPercentage; ?>%)</span>
+			</h2>
 
 			<!-- Top 5 donors of this event -->
 			<h3 class="mt-5"><?= _t("TOPFIVEUSER"); ?></h3>
@@ -40,7 +49,7 @@ if (is_array($data) && isset($data["event"])) {
 			?>
 
 			<div class="my-4 text-center">
-				<?= donationButton($data["event"]); ?>
+				<?= donationButton($data["paymentUrl"]); ?>
 			</div>
 
 		</div>

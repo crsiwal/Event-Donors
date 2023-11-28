@@ -7,17 +7,25 @@ function readEvents($csvFilePath, $eventName) {
 		$event = array_shift($data);
 		$title = array_shift($data);
 		$summery = array_shift($data);
+		$targetAmount = array_shift($data);
+		$paymentUrl = array_shift($data);
 		$total = array_sum(array_values($data));
 		arsort($data);
 		return [
 			"event" => $event,
 			"title" => $title,
 			"summery" => $summery,
+			"targetAmount" => $targetAmount,
+			"paymentUrl" => $paymentUrl,
 			"total" => $total,
 			"data" => $data,
 		];
 	}
 	return false;
+}
+
+function percentage($estimatedAmount, $receivedAmount) {
+	return ($estimatedAmount != 0) ? number_format(($receivedAmount / $estimatedAmount) * 100, 2) : 0;
 }
 
 function topDonor($donors, $count = 5) {
@@ -70,15 +78,16 @@ function donorTable($donors, $boldName = false) {
 			</tbody>
 		</table>
 	</div>
-<?php
+	<?php
 }
 
-function donationButton($tn = "Donation", $pn = "Rashtriya Kisan Mazdoor Sangathan") {
-?>
-	<a class="btn btn-outline-danger fw-bold px-5 btn-lg" href="upi://pay?pa=rahulsiwal62@oksbi&cu=INR&tn=<?= $tn; ?>&pn=<?= $pn; ?>">>> <?= _t("YOURCONTRIBUTE"); ?></a>
+function donationButton($link) {
+	if (!empty($link)) {
+	?>
+		<a class="btn btn-outline-danger fw-bold px-5 btn-lg" href="<?= $link; ?>">>> <?= _t("YOURCONTRIBUTE"); ?></a>
 <?php
+	}
 }
-
 
 function formatCurrency($amount) {
 	return '₹ ' . str_replace(',', ',', number_format($amount, 2, '.', ','));
