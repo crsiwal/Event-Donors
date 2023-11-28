@@ -4,6 +4,6 @@ This is simple event donor management tool which is based on the csv data file. 
 
 ## Event URL
 
-https://www.example.com/{CSV Data File Name}/{Event Name in Data File Header Column}
+https://www.example.com/{CSV_Data_File_Name}/{Event_Name_in_Data_File_Header_Column}
 
 eg: https://www.example.com/myorg/eventx
