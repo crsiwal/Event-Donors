@@ -9,6 +9,7 @@ $language = [];
 
 // Set the Path of the root directory
 define('BASEPATH', dirname(dirname(__FILE__)) . DIRECTORY_SEPARATOR);
+// define('LANG', 'english');
 define('LANG', 'hindi');
 
 load("functions/eventReader");
@@ -23,9 +24,9 @@ function base_url($path = "") {
     );
 }
 
-function _t($langkey) {
+function _t($languageKey) {
     global $language;
-    return isset($language[$langkey]) ? $language[$langkey] : "UNKNOWN KEY";
+    return isset($language[$languageKey]) ? $language[$languageKey] : "UNKNOWN KEY";
 }
 
 function load($filePath, $dataFile = "", $eventName = "") {

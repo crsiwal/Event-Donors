@@ -66,13 +66,15 @@ function donorTable($donors, $boldName = false) {
 				<?php
 				$serial = 1;
 				foreach ($donors as $person => $amount) {
+					if (!in_array($amount, ["--"])) {
 				?>
-					<tr>
-						<th scope="row"><?= $serial++; ?></th>
-						<td class="<?= $boldName ? 'fw-bold' : ''; ?>"><?= $person; ?></td>
-						<td><?= formatCurrency(empty($amount) ? 0 : $amount); ?></td>
-					</tr>
+						<tr>
+							<th scope="row"><?= $serial++; ?></th>
+							<td class="<?= $boldName ? 'fw-bold' : ''; ?>"><?= $person; ?></td>
+							<td><?= formatCurrency((empty($amount) || !is_numeric($amount)) ? 0 : $amount); ?></td>
+						</tr>
 				<?php
+					}
 				}
 				?>
 			</tbody>

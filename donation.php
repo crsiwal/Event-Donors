@@ -23,15 +23,19 @@ if (is_array($data) && isset($data["event"])) {
 			</div>
 
 			<!-- Total amount -->
-			<h2 class="mt-5"><?= _t("TARGETAMOUNT"); ?>: <?= formatCurrency($data["targetAmount"]); ?></h2>
+			<h2 class="mt-5">
+				<div class="fs-3"><?= _t("TARGETAMOUNT"); ?>:</div>
+				<span class="fs-1"><?= formatCurrency($data["targetAmount"]); ?></span>
+			</h2>
 
 			<!-- Total amount -->
 			<?php
 			$receivedPercentage = percentage($data["targetAmount"], $data["total"]);
 			?>
 			<h2 class="mt-5">
-				<?= _t("TOTALAMOUNT"); ?>: <?= formatCurrency($data["total"]); ?>
-				<span class="text-<?= $receivedPercentage > 100 ? 'success' : 'danger'; ?>">(<?= $receivedPercentage; ?>%)</span>
+				<div class="fs-3"><?= _t("TOTALAMOUNT"); ?>:</div>
+				<span class="fs-1"><?= formatCurrency($data["total"]); ?></span>
+				<span class="fs-3 text-<?= $receivedPercentage > 100 ? 'success' : 'danger'; ?>">(<?= $receivedPercentage; ?>%)</span>
 			</h2>
 
 			<!-- Top 5 donors of this event -->
@@ -39,19 +43,19 @@ if (is_array($data) && isset($data["event"])) {
 			<?php
 			$topDonor = array_slice($data["data"], 0, 5, true);
 			donorTable($topDonor, true);
-			?>
 
-			<h3 class="mt-3"><?= _t("DONORLIST"); ?></h3>
+			// Get the remaining donor list and show them
+			$remainingDonor = array_slice($data["data"], 5);
+			if (count($remainingDonor) > 0) {
+			?>
+				<h3 class="mt-3"><?= _t("DONORLIST"); ?></h3>
 			<?php
-			$remaningDonor = array_slice($data["data"], 5);
-
-			donorTable($remaningDonor);
+				donorTable($remainingDonor);
+			}
 			?>
-
 			<div class="my-4 text-center">
 				<?= donationButton($data["paymentUrl"]); ?>
 			</div>
-
 		</div>
 	</body>
 
